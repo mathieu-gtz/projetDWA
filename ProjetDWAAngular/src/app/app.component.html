@@ -1,0 +1,46 @@
+
+<div class="app-container" [ngClass]="{'dark': isDarkMode}" *ngIf="!isUserLoggedIn">
+  <mat-toolbar color="primary" class="navbar">
+    <span class="navbar-brand">Qui est-ce ?</span>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/signup" routerLinkActive="active">
+      Sign Up
+    </button>
+    <button mat-button routerLink="/login" routerLinkActive="active">
+      Login
+    </button>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</div>
+
+<div class="app-container" [ngClass]="{'dark': isDarkMode}" *ngIf="isUserLoggedIn">
+  <mat-toolbar color="primary" class="navbar">
+    <span class="navbar-brand">Qui est-ce ?</span>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/player/home" routerLinkActive="active">
+      Home
+    </button>
+    <button mat-button routerLink="/player/scoreboard" routerLinkActive="active">
+      Classement
+    </button>
+    <button mat-button routerLink="/player/create-game" routerLinkActive="active">
+      Creer une partie
+    </button>
+    <button mat-button routerLink="/player/grids" routerLinkActive="active">
+      Grilles
+    </button>
+    <button mat-button routerLink="/player/create-charac" routerLinkActive="active">
+      Ajouter un personnage
+    </button>
+    <button mat-button routerLink="/player/account" routerLinkActive="active">
+      Account
+    </button>
+    <button mat-button (click)="logout()" routerLinkActive="active">
+      Logout
+    </button>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+</div>
+
+
+

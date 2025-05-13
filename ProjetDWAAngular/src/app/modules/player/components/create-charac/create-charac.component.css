@@ -1,0 +1,55 @@
+.create-character-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.image-preview {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 1rem;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #ccc;
+}
+
+.image-preview img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+mat-card {
+  padding: 2rem;
+}
+
+mat-card-header {
+  margin-bottom: 2rem;
+}
+
+mat-card-title {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}

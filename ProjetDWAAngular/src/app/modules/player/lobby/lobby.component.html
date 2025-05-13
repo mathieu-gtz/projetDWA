@@ -1,0 +1,84 @@
+<div class="lobby-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Lobby de partie</mat-card-title>
+      <mat-card-subtitle>En attente de joueurs...</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div *ngIf="!gameData" class="loading">
+        Chargement des informations de la partie...
+      </div>
+
+      <div *ngIf="gameData" class="lobby-content">
+        <mat-divider></mat-divider>
+
+        <div class="game-info">
+          <h3>Informations de la partie</h3>
+          <p>ID de la partie : {{ gameId }}</p>
+          <p *ngIf="gameData.password">Cette partie est protégée par un mot de passe</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="players-section">
+          <h3>Joueurs</h3>
+
+          <div class="player-row">
+            <div class="player-info">
+              <mat-icon class="player-icon" color="primary">person</mat-icon>
+              <span class="player-name">{{ gameData.player1 }} (Créateur)</span>
+            </div>
+            <mat-chip [color]="player1Ready ? 'primary' : 'warn'" selected>
+              {{ player1Ready ? 'Prêt' : 'Pas prêt' }}
+            </mat-chip>
+          </div>
+
+          <div class="player-row" *ngIf="player2Present">
+            <div class="player-info">
+              <mat-icon class="player-icon" color="accent">person</mat-icon>
+              <span class="player-name">{{ gameData.player2 }}</span>
+            </div>
+            <mat-chip [color]="player2Ready ? 'primary' : 'warn'" selected>
+              {{ player2Ready ? 'Prêt' : 'Pas prêt' }}
+            </mat-chip>
+          </div>
+
+          <div class="player-row waiting-message" *ngIf="!player2Present">
+            <mat-icon color="warn">hourglass_empty</mat-icon>
+            <span>En attente d'un deuxième joueur...</span>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="status-section">
+          <h3>Statut</h3>
+          <p *ngIf="!player2Present">
+            Partagez l'identifiant de la partie pour permettre à un autre joueur de vous rejoindre.
+          </p>
+          <p *ngIf="player2Present && !(player1Ready && player2Ready)">
+            Les deux joueurs doivent être prêts pour commencer la partie.
+          </p>
+          <p *ngIf="player1Ready && player2Ready && player2Present" class="ready-message">
+            <mat-icon color="primary">check_circle</mat-icon>
+            Les deux joueurs sont prêts ! La partie va commencer...
+          </p>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-raised-button color="warn" (click)="leaveLobby()">
+        <mat-icon>exit_to_app</mat-icon> Quitter
+      </button>
+
+      <button mat-raised-button [color]="isCreator && player1Ready || !isCreator && player2Ready ? 'warn' : 'primary'"
+              (click)="toggleReady()"
+              [disabled]="!player2Present && !isCreator">
+        <mat-icon>{{ isCreator && player1Ready || !isCreator && player2Ready ? 'cancel' : 'check_circle' }}</mat-icon>
+        {{ isCreator && player1Ready || !isCreator && player2Ready ? 'Annuler prêt' : 'Je suis prêt' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

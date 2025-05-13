@@ -1,0 +1,70 @@
+.lobby-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.lobby-content {
+  padding: 1rem 0;
+}
+
+mat-divider {
+  margin: 1.5rem 0;
+}
+
+.game-info, .players-section, .status-section {
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  color: #3f51b5;
+  margin-bottom: 1rem;
+}
+
+.player-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+}
+
+.player-icon {
+  margin-right: 0.5rem;
+}
+
+.waiting-message {
+  color: #f44336;
+  justify-content: center;
+}
+
+.ready-message {
+  display: flex;
+  align-items: center;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.ready-message mat-icon {
+  margin-right: 0.5rem;
+}
+
+mat-card-actions button {
+  margin-left: 8px;
+}

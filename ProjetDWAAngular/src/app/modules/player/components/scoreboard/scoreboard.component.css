@@ -1,0 +1,83 @@
+.scoreboard-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.scoreboard-card {
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+
+.ranking-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.online {
+  background-color: #4CAF50;
+  box-shadow: 0 0 5px #4CAF50;
+}
+
+.offline {
+  background-color: #F44336;
+}
+
+.rank-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.gold {
+  background-color: #FFD700;
+  color: #333;
+}
+
+.silver {
+  background-color: #C0C0C0;
+  color: #333;
+}
+
+.bronze {
+  background-color: #CD7F32;
+  color: white;
+}
+
+.refresh-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend .status-indicator {
+  margin-right: 5px;
+  margin-left: 15px;
+}

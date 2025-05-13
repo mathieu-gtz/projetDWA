@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Devinez le personnage</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Sélectionnez un personnage</mat-label>
+    <mat-select [(ngModel)]="selectedCharacter">
+      <mat-option *ngFor="let char of data.characters" [value]="char">
+        {{ char.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Annuler</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="!selectedCharacter"
+    (click)="onConfirm()"
+  >
+    Confirmer
+  </button>
+</mat-dialog-actions>

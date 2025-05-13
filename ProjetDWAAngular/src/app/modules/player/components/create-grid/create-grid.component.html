@@ -1,0 +1,73 @@
+<div class="create-grid-container">
+  <h1>Créer une nouvelle grille</h1>
+
+  <form [formGroup]="gridForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Nom de la grille</mat-label>
+      <input matInput formControlName="nameGrid" required>
+      <mat-error *ngIf="gridForm.get('nameGrid')?.hasError('required')">Le nom est obligatoire</mat-error>
+      <mat-error *ngIf="gridForm.get('nameGrid')?.hasError('minlength')">Le nom doit contenir au moins 3 caractères</mat-error>
+    </mat-form-field>
+
+    <div class="selection-info">
+      <p>Sélectionnez entre 9 et 24 personnages pour votre grille</p>
+      <p>Personnages sélectionnés: <strong>{{ selectedCharacters.length }}</strong></p>
+    </div>
+
+    <!-- Section des personnages sélectionnés -->
+    <div class="selected-characters-section" *ngIf="selectedCharacters.length > 0">
+      <h2>Personnages sélectionnés</h2>
+      <div class="characters-grid selected-characters">
+        <mat-card *ngFor="let character of selectedCharacters" class="character-card selected">
+          <div class="character-image-container">
+            <img [src]="getCharacterImageUrl(character)" [alt]="character.name">
+          </div>
+          <mat-card-content>
+            <h3>{{ character.name }}</h3>
+          </mat-card-content>
+          <button mat-icon-button class="remove-character-btn" (click)="unselectCharacter(character, $event)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Bouton pour basculer l'affichage de la liste des personnages -->
+    <div class="toggle-section">
+      <button type="button" mat-button color="primary" (click)="toggleCharacterList()">
+        <mat-icon>{{ showCharactersList ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+        {{ showCharactersList ? 'Masquer la liste des personnages' : 'Afficher la liste des personnages' }}
+      </button>
+    </div>
+
+    <!-- Section de la liste des personnages -->
+    <div class="characters-section" *ngIf="showCharactersList">
+      <h2>Personnages disponibles</h2>
+      <div class="characters-grid">
+        <mat-card *ngFor="let character of characters"
+                  [class.selected]="isSelected(character)"
+                  (click)="toggleCharacterSelection(character)"
+                  class="character-card">
+          <div class="character-image-container">
+            <img [src]="getCharacterImageUrl(character)" [alt]="character.name">
+          </div>
+          <mat-card-content>
+            <h3>{{ character.name }}</h3>
+          </mat-card-content>
+          <div class="selection-overlay" *ngIf="isSelected(character)">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" mat-button routerLink="/player/grids">Annuler</button>
+      <button type="submit" mat-raised-button color="primary"
+              [disabled]="!gridForm.valid || selectedCharacters.length < 9 || isSubmitting">
+        <mat-spinner diameter="20" *ngIf="isSubmitting"></mat-spinner>
+        <span *ngIf="!isSubmitting">Créer la grille</span>
+      </button>
+    </div>
+  </form>
+</div>

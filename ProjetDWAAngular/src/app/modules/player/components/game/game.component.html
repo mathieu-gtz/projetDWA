@@ -1,0 +1,101 @@
+<div class="game-container">
+  <div class="game-info">
+    <h2>Partie #{{ game?.idG }}</h2>
+    <div class="player-info">
+      <p>Joueur 1: {{ game?.player1 }}</p>
+      <p>Joueur 2: {{ game?.player2 }}</p>
+    </div>
+    <div class="scores">
+      <div>
+        {{
+          gameRules?.maxRounds === -1
+            ? "Manche " + currentRound
+            : "Manche " + currentRound + "/" + gameRules?.maxRounds
+        }}
+      </div>
+      <p>Score: {{ game?.score1 }} - {{ game?.score2 }}</p>
+    </div>
+  </div>
+
+  <mat-grid-list [cols]="4" rowHeight="1:1" *ngIf="characters.length">
+    <mat-grid-tile *ngFor="let character of characters">
+      <mat-card class="character-card">
+        <img
+          [src]="getCharacterImageUrl(character.idC)"
+          [alt]="character.name"
+          class="character-image"
+        />
+        <mat-card-header>
+          <mat-card-title>{{ character.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ character.caracteristic }}</p>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <!-- Chat -->
+  <div class="game-controls">
+    <div class="chat-container">
+      <!-- Messages du chat -->
+      <div class="messages-container">
+        <div
+          *ngFor="let message of messages"
+          class="message"
+          [ngClass]="message.type.toLowerCase()"
+        >
+          <span class="sender">{{ message.sender }}:</span>
+          <span class="content">{{ message.content }}</span>
+        </div>
+      </div>
+
+      <!-- Zone de saisie -->
+      <div class="chat-input">
+        <mat-form-field appearance="outline" class="full-width">
+          <input
+            matInput
+            [(ngModel)]="currentChatMessage"
+            placeholder="Message ou '?' pour une question..."
+            (keyup.enter)="processMessage(currentChatMessage)"
+          />
+          <mat-hint *ngIf="isCurrentPlayerTurn">
+            {{
+              canAskQuestion
+                ? "Vous pouvez poser une question en commençant par '?'"
+                : "Attendez la réponse à votre question"
+            }}
+          </mat-hint>
+        </mat-form-field>
+        <button mat-button (click)="processMessage(currentChatMessage)">
+          Envoyer
+        </button>
+      </div>
+
+      <!-- Réponses -->
+      <div
+        *ngIf="waitingForAnswer && !isCurrentPlayerTurn"
+        class="answer-buttons"
+      >
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="answerQuestion(true)"
+        >
+          OUI
+        </button>
+        <button mat-raised-button color="warn" (click)="answerQuestion(false)">
+          NON
+        </button>
+      </div>
+
+      <!-- Pour deviner -->
+      <div *ngIf="waitingForGuess && isCurrentPlayerTurn" class="guess-buttons">
+        <button mat-raised-button color="primary" (click)="makeGuess(true)">
+          Deviner le personnage
+        </button>
+        <button mat-raised-button (click)="makeGuess(false)">Passer</button>
+      </div>
+    </div>
+  </div>
+</div>

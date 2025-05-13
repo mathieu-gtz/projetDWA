@@ -1,0 +1,33 @@
+<div class="grid-details-container">
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des détails de la grille...</p>
+  </div>
+
+  <div *ngIf="!loading">
+    <h1>{{ grid.nameGrid }}</h1>
+
+    <div *ngIf="grid.characs && grid.characs.length > 0" class="characters-grid">
+      <mat-card *ngFor="let character of grid.characs" class="character-card">
+        <img
+          *ngIf="character.imagePath"
+          mat-card-image
+          [src]="getCharacterImageUrl(character.idC)"
+          [alt]="character.name"
+          class="character-image">
+
+        <div *ngIf="!character.imagePath" class="no-image">
+          <span>Pas d'image</span>
+        </div>
+
+        <mat-card-content>
+          <h3>{{ character.name }}</h3>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div *ngIf="!grid.characs || grid.characs.length === 0" class="no-characters">
+      <p>Cette grille ne contient aucun personnage.</p>
+    </div>
+  </div>
+</div>

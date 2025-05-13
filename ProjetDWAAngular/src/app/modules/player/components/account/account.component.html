@@ -1,0 +1,128 @@
+<div class="account-container">
+  <h1>Gestion du compte</h1>
+
+  <div *ngIf="dataLoading" class="center-spinner">
+    <mat-spinner></mat-spinner>
+    <p>Chargement de vos informations...</p>
+  </div>
+
+  <div *ngIf="!dataLoading">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Profil de {{ currentPlayer.nickname }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="nickname-display">
+          <p class="label">Pseudo :</p>
+          <p class="value">{{ currentPlayer.nickname }}</p>
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Âge (actuel : {{ currentPlayer.age || 'Non spécifié' }})</mat-label>
+            <input matInput type="number" formControlName="age" [placeholder]="currentPlayer.age?.toString() || 'Entrez votre âge'">
+            <mat-error *ngIf="profileForm.get('age')?.errors?.['min'] || profileForm.get('age')?.errors?.['max']">
+              L'âge doit être compris entre 13 et 120 ans
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Genre (actuel : {{ getGenderLabel(currentPlayer.gender) }})</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option value="M">Homme</mat-option>
+              <mat-option value="F">Femme</mat-option>
+              <mat-option value="O">Autre</mat-option>
+            </mat-select>
+           </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid || loading">
+              <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+              <span *ngIf="!loading">Mettre à jour le profil</span>
+            </button>
+
+            <button mat-button type="button" (click)="initializeFormValues()" [disabled]="loading">
+              Réinitialiser
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  <mat-card class="mt-20">
+    <mat-card-header>
+      <mat-card-title>Changer le mot de passe</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Mot de passe actuel</mat-label>
+          <input matInput type="password" formControlName="currentPassword">
+          <mat-error *ngIf="passwordForm.get('currentPassword')?.errors?.['required']">
+            Le mot de passe actuel est obligatoire
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nouveau mot de passe</mat-label>
+          <input matInput type="password" formControlName="newPassword">
+          <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['required']">
+            Le nouveau mot de passe est obligatoire
+          </mat-error>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">
+            Le mot de passe doit contenir au moins 8 caractères
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmer le mot de passe</mat-label>
+          <input matInput type="password" formControlName="confirmPassword">
+          <mat-error *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']">
+            La confirmation du mot de passe est obligatoire
+          </mat-error>
+          <mat-error *ngIf="passwordForm.hasError('notSame')">
+            Les mots de passe ne correspondent pas
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" type="submit" [disabled]="passwordForm.invalid || loading">
+          Changer le mot de passe
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-20">
+    <mat-card-header>
+      <mat-card-title>Statistiques de jeu</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="loading" class="center-spinner">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <div *ngIf="!loading && playerStats">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-value">{{ playerStats.gamesPlayed }}</div>
+            <div class="stat-label">Parties jouées</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ playerStats.gamesWon }}</div>
+            <div class="stat-label">Victoires</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ playerStats.winRate }}%</div>
+            <div class="stat-label">Taux de victoire</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">{{ playerStats.averageScore | number:'1.1-1' }}</div>
+            <div class="stat-label">Score moyen</div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!loading && !playerStats" class="no-stats">
+        Aucune statistique disponible. Jouez quelques parties !
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,64 @@
+<div class="create-character-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Créer un nouveau personnage</mat-card-title>
+      <mat-card-subtitle>
+        Ajoutez un personnage à la base de données pour l'utiliser dans vos grilles
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="characForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nom du personnage</mat-label>
+            <input matInput formControlName="name" placeholder="Ex: Sherlock Holmes">
+            <mat-error *ngIf="characForm.get('name')?.hasError('required')">
+              Le nom est obligatoire
+            </mat-error>
+            <mat-error *ngIf="characForm.get('name')?.hasError('minlength')">
+              Le nom doit contenir au moins 2 caractères
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Caractéristique principale du personnage</mat-label>
+            <input matInput formControlName="caracteristic" placeholder="Ex: Personnage Historique">
+            <mat-error *ngIf="characForm.get('caracteristic')?.hasError('required')">
+              La charactéristique est obligatoire
+            </mat-error>
+            <mat-error *ngIf="characForm.get('caracteristic')?.hasError('minlength')">
+              La charactéristique principale dois contenir au moins 2 caractères
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-field image-upload-container">
+          <button type="button" mat-raised-button color="primary" (click)="fileInput.click()">
+            <mat-icon>add_photo_alternate</mat-icon>
+            Sélectionner une image
+          </button>
+          <input #fileInput type="file" accept="image/*" style="display:none" (change)="onFileSelected($event)">
+
+          <div *ngIf="previewUrl" class="image-preview">
+            <img [src]="previewUrl" alt="Prévisualisation">
+          </div>
+
+          <mat-error *ngIf="isImageRequiredAndTouched()">
+            L'image est obligatoire
+          </mat-error>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" mat-button (click)="goBack()">Annuler</button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="!characForm.valid || isSubmitting">
+            <mat-icon>save</mat-icon>
+            Enregistrer
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

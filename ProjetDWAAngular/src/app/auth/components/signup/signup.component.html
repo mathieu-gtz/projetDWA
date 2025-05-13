@@ -1,0 +1,103 @@
+<div class="container">
+  <mat-card>
+    <mat-card-title>Sign Up</mat-card-title>
+
+    <mat-card-content>
+      <form [formGroup]="signupForm">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nickname</mat-label>
+          <input
+            matInput
+            formControlName="nickname"
+            placeholder="nickname"
+            required
+          />
+
+          <mat-error
+            *ngIf="isFieldInvalid('nickname')"
+          >Please enter a valid Nickname.</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Age</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="age"
+            placeholder="Your age"
+            required
+          />
+          <mat-error *ngIf="isFieldInvalid('age')">
+            Please enter a valid age.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender" required>
+            <mat-option value="M">Male</mat-option>
+            <mat-option value="F">Female</mat-option>
+            <mat-option value="M">Other</mat-option>
+          </mat-select>
+          <mat-error *ngIf="isFieldInvalid('gender')">
+            Please select your gender.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            type="{{ hidePassword ? 'password' : 'text' }}"
+            formControlName="confirmPassword"
+            placeholder="Password"
+            required
+          />
+
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="togglePasswordVisibility()"
+          >
+            <mat-icon>{{
+                hidePassword ? "visibility_off" : "visibility"
+              }}</mat-icon>
+          </button>
+
+          <mat-error
+            *ngIf="isFieldInvalid('password')"
+          >Please enter a valid password.</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            type="{{ hidePassword ? 'password' : 'text' }}"
+            formControlName="password"
+            placeholder="Password"
+            required
+          />
+
+          <mat-error
+            *ngIf="isFieldInvalid('password')"
+          >Please enter a valid password.</mat-error
+          >
+        </mat-form-field>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="signupForm.invalid"
+          (click)="onSubmit()"
+        >
+          Sign Up
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
