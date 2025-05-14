@@ -372,7 +372,7 @@ private initializeWebSocketConnection(gameId: string) {
     processMessage(message: string) {
         if (!message?.trim()) return;
 
-        const isQuestion = message.trim().startsWith('?');
+        const isQuestion = message.trim().startsWith('/question');
 
         if (isQuestion) {
             const isPlayer1 = this.game.player1 === StorageService.getUser().nickname;
