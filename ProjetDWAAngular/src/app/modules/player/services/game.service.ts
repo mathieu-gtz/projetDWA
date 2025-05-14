@@ -227,19 +227,26 @@ export class GameService {
   }
 
   updateRound(gameId: number): Observable<Game> {
-    const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${StorageService.getToken()}`
-    });
+      const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${StorageService.getToken()}`
+      });
 
-    return this.http.put<Game>(
-        `${BASE_URL}/${gameId}/nextRound`,
-        {},
-        { headers }
-    ).pipe(
-        tap(game => console.log('Moving to next round:', game))
-    );
+      return this.http.put<Game>(
+          `${BASE_URL}/${gameId}/nextRound`,
+          {},
+          { headers }
+      ).pipe(
+          tap(game => console.log('Moving to next round:', game)),
+          catchError(error => {
+              console.error('Error updating round:', error);
+              if (error.status === 403) {
+                  console.error('Authentication error - token may be invalid');
+              }
+              return throwError(() => error);
+          })
+      );
   }
 
   endGame(gameId: number, winner: string): Observable<Game> {
