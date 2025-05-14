@@ -131,33 +131,58 @@ export class GameService {
   }
 
   getGame(gameId: string | number): Observable<Game> {
-      return this.http.get<Game>(`${BASE_URL}/${gameId}`, { 
-          headers: this.getHeaders() 
-      }).pipe(
-          tap(game => {
-              console.log('Game data received:', game);
-              // Log authentication info for debugging
-              console.log('Auth token:', StorageService.getToken()?.substring(0, 20) + '...');
-          }),
-          catchError(error => {
-              console.error('Error fetching game:', error);
-              if (error.status === 403) {
-                  console.error('Authentication error - token may be invalid or expired');
+      const headers = new HttpHeaders({
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${StorageService.getToken()}`
+      });
+
+      return this.http.get<Game>(`${BASE_URL}/${gameId}`, { headers }).pipe(
+          map(game => {
+              if (!game.gameRules || !game.gameRules.maxRounds) {
+                  console.warn('Incomplete game rules detected, fetching rules...');
+
+                  // Faire un appel séparé pour obtenir les règles
+                  this.http.get<Game>(`${BASE_URL}/${gameId}/rules`, { headers })
+                      .subscribe(rulesResponse => {
+                          if (rulesResponse.gameRules) {
+                              game.gameRules = rulesResponse.gameRules;
+                              console.log('Updated game rules:', game.gameRules);
+                          }
+                      });
               }
-              return throwError(() => error);
+              return game;
+          }),
+          tap(game => {
+              console.log('Complete game data:', {
+                  id: game.idG,
+                  rules: game.gameRules,
+                  players: {
+                      player1: game.player1,
+                      player2: game.player2
+                  }
+              });
           })
       );
   }
 
   getGridById(id: number): Observable<Grid> {
-      return this.http.get<Grid>(`${BASE_URL}/grids/${id}`, {
+      return this.http.get<Grid>(`${environment.apiUrl}/api/grids/${id}`, {
           headers: this.getHeaders()
       }).pipe(
-          tap(grid => console.log('Grid data received:', grid)),
+          tap(grid => {
+              console.log('Grid data received:', grid);
+              console.log('Current auth token:', StorageService.getToken()?.substring(0, 20) + '...');
+          }),
           catchError(error => {
               console.error('Error fetching grid:', error);
               if (error.status === 403) {
-                  console.error('Authentication error - token may be invalid or expired');
+                  if (!StorageService.getToken()) {
+                      console.error('No token found - user may need to login');
+                  } else {
+                      console.error('Token may be expired or invalid:', 
+                          StorageService.getToken()?.substring(0, 20) + '...');
+                  }
               }
               return throwError(() => error);
           })
