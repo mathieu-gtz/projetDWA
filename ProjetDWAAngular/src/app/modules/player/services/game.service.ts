@@ -205,11 +205,10 @@ export class GameService {
           'Accept': 'application/json',
           'Authorization': `Bearer ${StorageService.getToken()}`
       });
-
-      return this.http.put<Game>(
-          `${this.apiUrl}/games/${gameId}/score`,
-          { pointForPlayer1: pointForPlayer1 },
-          { headers }
+    return this.http.put<Game>(
+        `${BASE_URL}/${gameId}/score`,
+        { pointForPlayer1 },
+        { headers }
       ).pipe(
           map(response => {
               return {
