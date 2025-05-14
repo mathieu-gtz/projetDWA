@@ -19,21 +19,20 @@
 
   <mat-grid-list [cols]="4" rowHeight="1:1" *ngIf="characters.length">
     <mat-grid-tile *ngFor="let character of characters">
-      <mat-card class="character-card">
+      <mat-card
+        class="character-card"
+        [ngClass]="{ 'grayed-out': grayedOutCharacters.has(character.idC) }"
+        (click)="toggleCharacterGrayOut(character, $event)"
+      >
         <img
           [src]="getCharacterImageUrl(character)"
           [alt]="character.name"
           class="character-image"
           (error)="handleImageError($event)"
-          loading="lazy"
-          crossorigin="anonymous"
         />
         <mat-card-header>
           <mat-card-title>{{ character.name }}</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-          <p>{{ character.caracteristic }}</p>
-        </mat-card-content>
       </mat-card>
     </mat-grid-tile>
   </mat-grid-list>

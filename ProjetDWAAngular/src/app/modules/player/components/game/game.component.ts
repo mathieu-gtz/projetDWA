@@ -63,6 +63,7 @@ export class GameComponent implements OnInit {
   canAskMoreQuestions: boolean = true;
   player1TurnsUsed: number = 0;
   player2TurnsUsed: number = 0;
+  grayedOutCharacters: Set<number> = new Set();
 
   bothPlayersMustGuess: boolean = false;
   hasGuessedThisRound: { player1: boolean; player2: boolean } = {
@@ -745,6 +746,17 @@ private initializeWebSocketConnection(gameId: string) {
         } else {
             // Fallback vers l'image par défaut
             img.src = `${environment.apiUrl}/images/default.png`;
+        }
+    }
+
+    toggleCharacterGrayOut(character: Character, event: Event): void {
+        event.stopPropagation();
+        const characterId = character.idC;
+        
+        if (this.grayedOutCharacters.has(characterId)) {
+            this.grayedOutCharacters.delete(characterId);
+        } else {
+            this.grayedOutCharacters.add(characterId);
         }
     }
 
