@@ -595,9 +595,17 @@ private initializeWebSocketConnection(gameId: string) {
     }
 
     private resetRoundState() {
+        // Reset des tours utilisés
         this.player1TurnsUsed = 0;
         this.player2TurnsUsed = 0;
+        
+        // Reset des états de questions/réponses
+        this.canAskQuestion = this.isCurrentPlayerTurn;
         this.canAskMoreQuestions = true;
+        this.waitingForAnswer = false;
+        this.waitingForGuess = false;
+        
+        // Reset des états de devinette
         this.bothPlayersMustGuess = false;
         this.hasGuessedThisRound = {
             player1: false,
@@ -607,8 +615,13 @@ private initializeWebSocketConnection(gameId: string) {
             player1Result: null,
             player2Result: null
         };
-        this.waitingForGuess = false;
-        this.waitingForAnswer = false;
+        
+        // Reset des personnages sélectionnés
+        this.selectedCharacterToGuess = null;
+        this.mySelectedCharacter = null;
+
+        // Reset de l'état du tour
+        this.isCurrentPlayerTurn = StorageService.getUser().nickname === this.game.player1;
     }
 
     makeGuess(wantToGuess: boolean) {
