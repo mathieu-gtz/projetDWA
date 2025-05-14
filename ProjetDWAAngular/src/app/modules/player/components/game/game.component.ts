@@ -705,36 +705,46 @@ private initializeWebSocketConnection(gameId: string) {
     });
   }
 
-    getCharacterImageUrl(character: any): string {
+  getCharacterImageUrl(character: any): string {
     const characterId = typeof character === 'object' ? character.idC : character;
-    return this.characterImages.get(characterId) ||
-        `${environment.apiUrl}/images/default.png`;
-    }
+    const imageUrl = this.characterImages.get(characterId);
+    return imageUrl || `${environment.apiUrl}/images/default.png`;
+  }
 
-
-    preloadCharacterImages(): void {
+  preloadCharacterImages(): void {
     const imageRequests = this.characters.map(character => {
-        return this.characService.getCharacImageUrl(character.idC).pipe(
+      return this.characService.getCharacImageUrl(character.idC).pipe(
         map(imagePath => {
-            return { id: character.idC, path: imagePath };
+          console.log(`Received image path for character ${character.idC}:`, imagePath);
+          return { id: character.idC, path: imagePath };
         })
-        );
+      );
     });
 
     forkJoin(imageRequests).subscribe({
-        next: (results) => {
+      next: (results) => {
         results.forEach(result => {
-            // Utiliser l'URL de l'API de production
-            this.characterImages.set(result.id, `${environment.apiUrl}${result.path}`);
+          this.characterImages.set(result.id, result.path);
         });
         this.characters = [...this.characters];
-        },
-        error: (error) => {
+      },
+      error: (error) => {
         console.error('Erreur lors du chargement des images', error);
-        }
+      }
     });
+  }
+
+
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    const currentSrc = img.src;
+    console.error('Image failed to load:', currentSrc);
+    
+    if (currentSrc.includes('localhost:8080https://')) {
+      img.src = currentSrc.replace('http://localhost:8080', '');
+    } else {
+      img.src = `${environment.apiUrl}/images/default.png`;
     }
-
-
+  }
 
 }

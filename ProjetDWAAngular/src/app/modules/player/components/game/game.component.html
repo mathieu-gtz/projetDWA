@@ -24,6 +24,9 @@
           [src]="getCharacterImageUrl(character)"
           [alt]="character.name"
           class="character-image"
+          (error)="handleImageError($event)"
+          loading="lazy"
+          crossorigin="anonymous"
         />
         <mat-card-header>
           <mat-card-title>{{ character.name }}</mat-card-title>
