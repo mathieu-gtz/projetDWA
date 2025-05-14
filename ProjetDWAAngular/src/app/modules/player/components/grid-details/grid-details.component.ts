@@ -69,10 +69,11 @@ export class GridDetailsComponent implements OnInit {
     });
   }
 
-preloadCharacterImages(): void {
+  preloadCharacterImages(): void {
     const imageRequests = this.characters.map(character => {
       return this.characService.getCharacImageUrl(character.idC).pipe(
         map(imagePath => {
+          console.log(`Received image path for character ${character.idC}:`, imagePath);
           return { id: character.idC, path: imagePath };
         })
       );
@@ -81,8 +82,13 @@ preloadCharacterImages(): void {
     forkJoin(imageRequests).subscribe({
       next: (results) => {
         results.forEach(result => {
-          // Store the complete URL
-          this.characterImages.set(result.id, result.path);
+          // Clean the URL before storing it
+          let cleanUrl = result.path;
+          if (cleanUrl.includes('localhost:8080')) {
+            cleanUrl = cleanUrl.replace('http://localhost:8080', environment.apiUrl);
+          }
+          console.log(`Storing clean URL for character ${result.id}:`, cleanUrl);
+          this.characterImages.set(result.id, cleanUrl);
         });
         this.characters = [...this.characters];
       },
@@ -94,19 +100,21 @@ preloadCharacterImages(): void {
 
   getCharacterImageUrl(character: any): string {
     const characterId = typeof character === 'object' ? character.idC : character;
-    // Return the complete URL directly without modification
-    return this.characterImages.get(characterId) || `${environment.apiUrl}/images/default.png`;
+    const imageUrl = this.characterImages.get(characterId);
+    console.log(`Getting URL for character ${characterId}:`, imageUrl);
+    return imageUrl || `${environment.apiUrl}/images/default.png`;
   }
 
   handleImageError(event: Event) {
     const img = event.target as HTMLImageElement;
-    const currentSrc = img.src;
-    console.error('Image failed to load:', currentSrc);
+    console.error('Image failed to load:', img.src);
     
-    // Remove localhost if it was incorrectly prepended
-    if (currentSrc.includes('localhost:8080https://')) {
-      img.src = currentSrc.replace('http://localhost:8080', '');
+    if (img.src.includes('localhost:8080')) {
+      const cleanUrl = img.src.replace('http://localhost:8080', environment.apiUrl);
+      console.log('Retrying with clean URL:', cleanUrl);
+      img.src = cleanUrl;
     } else {
+      console.log('Using default image');
       img.src = `${environment.apiUrl}/images/default.png`;
     }
   }

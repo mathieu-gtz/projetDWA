@@ -22,16 +22,17 @@
           loading="lazy"
           (error)="handleImageError($event)"
           class="character-image"
-        />
+          onerror="this.onerror=null;">
 
         <div *ngIf="!character.imagePath" class="no-image">
-          <span>Pas d'image</span>
+          <img [src]="environment.apiUrl + '/images/default.png'" 
+              alt="Default image"
+              class="character-image">
         </div>
 
         <mat-card-content>
           <h3>{{ character.name }}</h3>
         </mat-card-content>
-      </mat-card>
     </div>
 
     <div
