@@ -561,18 +561,20 @@ private initializeWebSocketConnection(gameId: string) {
 
     private handleSystemMessage(message: GameMessage) {
         if (message.content === 'INCREMENT_ROUND') {
-            this.currentRound += 1;
-            this.resetRoundState();
-            this.canAskQuestion = this.isCurrentPlayerTurn;
-            this.selectedCharacterToGuess = null;
-            this.mySelectedCharacter = null;
+            if (message.sender !== StorageService.getUser().nickname) {
+                this.currentRound += 1;
+                this.resetRoundState();
+                this.canAskQuestion = this.isCurrentPlayerTurn;
+                this.selectedCharacterToGuess = null;
+                this.mySelectedCharacter = null;
 
-            if (this.characters && this.characters.length > 0) {
-                setTimeout(() => {
-                    this.openCharacterSelectionDialog();
-                }, 1000);
+                if (this.characters && this.characters.length > 0) {
+                    setTimeout(() => {
+                        this.openCharacterSelectionDialog();
+                    }, 1000);
+                }
             }
-        } else if (message.content === 'FORCE_GUESS') {
+        }else if (message.content === 'FORCE_GUESS') {
             if (this.bothPlayersMustGuess) return;
 
             this.bothPlayersMustGuess = true;
