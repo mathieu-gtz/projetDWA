@@ -108,14 +108,10 @@ export class GridDetailsComponent implements OnInit {
   handleImageError(event: Event) {
     const img = event.target as HTMLImageElement;
     console.error('Image failed to load:', img.src);
-    
-    if (img.src.includes('localhost:8080')) {
-      const cleanUrl = img.src.replace('http://localhost:8080', environment.apiUrl);
-      console.log('Retrying with clean URL:', cleanUrl);
-      img.src = cleanUrl;
-    } else {
-      console.log('Using default image');
-      img.src = `${environment.apiUrl}/images/default.png`;
-    }
+    img.src = this.getDefaultImageUrl();
+  }
+
+  getDefaultImageUrl(): string {
+    return `${environment.apiUrl}/images/default.png`;
   }
 }

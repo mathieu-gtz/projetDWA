@@ -25,14 +25,14 @@
           class="character-image"
         />
 
-        <!-- Image par défaut si pas d'image -->
         <div *ngIf="!character.imagePath" class="no-image">
           <img
-            [src]="environment.apiUrl + '/images/default.png'"
+            [src]="getDefaultImageUrl()"
             alt="Default image"
             class="character-image"
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
+            (error)="handleImageError($event)"
           />
         </div>
 
