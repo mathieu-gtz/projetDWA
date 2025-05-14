@@ -17,7 +17,7 @@
               "seedrandom",
               "sockjs-client"
             ],
-            "outputPath": "dist/projet-dwaangular",
+            "outputPath": "ProjetDWAAngular/dist/projet-dwaangular",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
