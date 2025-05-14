@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, throwError, of } from 'rxjs';
 import { StorageService } from '../../../auth/services/storage/storage.service';
 import { environment } from '../../../../environments/environment.prod';
 import { map } from 'rxjs/operators';
@@ -70,21 +70,39 @@ export class CharacService {
   }
 
   getCharacImageUrl(characId: number): Observable<string> {
+    console.log('Requesting image URL for character:', characId);
+    
     return this.http.get(`${this.apiUrl}/${characId}/image-url`, {
       headers: this.getHeaders(),
       responseType: 'text',
       withCredentials: true
     }).pipe(
       map(url => {
-        // Handle both relative and absolute URLs
+        console.log('Received raw URL:', url);
+        
+        // If it's a local URL (starting with /), prefix with API URL
         if (url.startsWith('/')) {
-          return `${environment.apiUrl}${url}`;
+          const fullUrl = `${environment.apiUrl}${url}`;
+          console.log('Constructed full URL:', fullUrl);
+          return fullUrl;
         }
-        return url.replace('http://', 'https://');
+        
+        // If it's localhost, replace with production URL
+        if (url.includes('localhost:8080')) {
+          const productionUrl = url.replace('http://localhost:8080', environment.apiUrl);
+          console.log('Converted localhost URL to:', productionUrl);
+          return productionUrl;
+        }
+        
+        // Ensure HTTPS
+        const secureUrl = url.replace('http://', 'https://');
+        console.log('Final URL:', secureUrl);
+        return secureUrl;
       }),
       catchError(error => {
         console.error(`Error loading character image ${characId}:`, error);
-        return throwError(() => error);
+        // Return a default image URL if there's an error
+        return of(`${environment.apiUrl}/images/default.png`);
       })
     );
   }
