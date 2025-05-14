@@ -494,21 +494,19 @@ private initializeWebSocketConnection(gameId: string) {
                     true;
 
                 if (shouldAdvanceRound) {
-                    this.gameService.updateRound(this.game.idG).subscribe(() => {
-                        this.currentRound++;
-                        this.resetRoundState();
-                        
-                        this.webSocketService.sendGameMessage({
-                            gameId: this.game.idG,
-                            type: 'SYSTEM',
-                            content: 'INCREMENT_ROUND',
-                            sender: StorageService.getUser().nickname
-                        });
-
-                        setTimeout(() => {
-                            this.openCharacterSelectionDialog();
-                        }, 1500);
+                    this.currentRound++;
+                    this.resetRoundState();
+                    
+                    this.webSocketService.sendGameMessage({
+                        gameId: this.game.idG,
+                        type: 'SYSTEM',
+                        content: 'INCREMENT_ROUND',
+                        sender: StorageService.getUser().nickname
                     });
+
+                    setTimeout(() => {
+                        this.openCharacterSelectionDialog();
+                    }, 1500);
                 }
             }
         });
