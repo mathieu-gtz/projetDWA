@@ -1,0 +1,11 @@
+<div class="image-container">
+  <img
+    *ngIf="imageUrl"
+    [src]="imageUrl"
+    (error)="handleImageError($event)"
+    [alt]="alt"
+    class="character-image"
+    crossorigin="anonymous"
+  />
+  <div *ngIf="loading" class="loading">Loading...</div>
+</div>

@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 export class CharacService {
   private apiUrl = `${environment.apiUrl}/api/characs`; 
 
-  private imageBaseUrl = environment.apiUrl;
+  public imageBaseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -82,15 +82,13 @@ export class CharacService {
       map(url => {
         console.log('Received raw URL:', url);
         
-        // If it's a path only (starts with /)
         if (url.startsWith('/')) {
-          // Directly construct the full URL that we know works
-          const fullUrl = `${this.imageBaseUrl}/images/charac${characId}.png`;
-          console.log('Direct image URL:', fullUrl);
+          const fullUrl = `${this.imageBaseUrl}${url}`;
+          console.log('Constructed full URL:', fullUrl);
           return fullUrl;
         }
         
-        return url;
+        return url.replace('http://', 'https://');
       }),
       catchError(error => {
         console.error(`Error loading character image ${characId}:`, error);
