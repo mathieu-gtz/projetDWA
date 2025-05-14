@@ -226,6 +226,22 @@ export class GameService {
       );
   }
 
+  updateRound(gameId: number): Observable<Game> {
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${StorageService.getToken()}`
+    });
+
+    return this.http.put<Game>(
+        `${BASE_URL}/${gameId}/nextRound`,
+        {},
+        { headers }
+    ).pipe(
+        tap(game => console.log('Moving to next round:', game))
+    );
+  }
+
   endGame(gameId: number, winner: string): Observable<Game> {
     const headers = new HttpHeaders({
         'Content-Type': 'application/json',

@@ -467,49 +467,48 @@ private initializeWebSocketConnection(gameId: string) {
 
         if (isPlayer1) {
             this.hasGuessedThisRound.player1 = true;
-            this.tempGuessResults.player1Result = isCorrectGuess;
         } else {
             this.hasGuessedThisRound.player2 = true;
-            this.tempGuessResults.player2Result = isCorrectGuess;
         }
 
-        this.webSocketService.sendGameMessage({
-            gameId: this.game.idG,
-            type: 'GUESS_RESULT',
-            content: JSON.stringify({
-                isCorrect: isCorrectGuess,
-                character: guessedCharacter,
-                player: StorageService.getUser().nickname
-            }),
-            sender: StorageService.getUser().nickname
-        });
-
         const pointForPlayer1 = (isPlayer1 && isCorrectGuess) || (!isPlayer1 && !isCorrectGuess);
-
         this.gameService.updateScore(this.game.idG, pointForPlayer1).subscribe(updatedGame => {
             if (updatedGame) {
                 this.game = updatedGame;
+                
                 this.webSocketService.sendGameMessage({
                     gameId: this.game.idG,
-                    type: 'SCORE_UPDATE',
+                    type: 'GUESS_RESULT',
                     content: JSON.stringify({
-                        score1: updatedGame.score1,
-                        score2: updatedGame.score2
+                        isCorrect: isCorrectGuess,
+                        character: guessedCharacter,
+                        player: StorageService.getUser().nickname
                     }),
                     sender: StorageService.getUser().nickname
                 });
 
                 this.showResultDialog(isCorrectGuess, guessedCharacter.name);
 
-                if (isPlayer1 && this.hasGuessedThisRound.player1 && this.hasGuessedThisRound.player2) {
-                    setTimeout(() => {
+                const shouldAdvanceRound = this.bothPlayersMustGuess ? 
+                    (this.hasGuessedThisRound.player1 && this.hasGuessedThisRound.player2) :
+                    true;
+
+                if (shouldAdvanceRound) {
+                    this.gameService.updateRound(this.game.idG).subscribe(() => {
+                        this.currentRound++;
+                        this.resetRoundState();
+                        
                         this.webSocketService.sendGameMessage({
                             gameId: this.game.idG,
                             type: 'SYSTEM',
                             content: 'INCREMENT_ROUND',
                             sender: StorageService.getUser().nickname
                         });
-                    }, 1500);
+
+                        setTimeout(() => {
+                            this.openCharacterSelectionDialog();
+                        }, 1500);
+                    });
                 }
             }
         });
