@@ -59,6 +59,9 @@ export class LoginComponent {
       nickname: this.loginForm.get('nickname')?.value,
       pswrd: this.loginForm.get('password')?.value  // renomme password en pswrd
     };
+
+    console.log('Sending login request with data:', loginData);
+
     this.authService.login(loginData).subscribe({
       next: (res) => {
         console.log(res);
