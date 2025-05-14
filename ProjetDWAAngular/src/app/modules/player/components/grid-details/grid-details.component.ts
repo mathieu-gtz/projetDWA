@@ -7,6 +7,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import {forkJoin, map} from 'rxjs';
 import { CharacService } from '../../services/charac.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { environment } from '../../../../../../src/environments/environment.prod';
 
 @Component({
   selector: 'app-grid-details',
@@ -93,6 +94,12 @@ export class GridDetailsComponent implements OnInit {
   getCharacterImageUrl(character: any): string {
     const characterId = typeof character === 'object' ? character.idC : character;
     return this.characterImages.get(characterId) ||
-      `http://localhost:8080/images/default.png`;
+      `${environment.apiUrl}/images/default.png`; // Use environment variable
+  }
+
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    console.error('Image failed to load:', img.src);
+    img.src = `${environment.apiUrl}/images/default.png`;
   }
 }

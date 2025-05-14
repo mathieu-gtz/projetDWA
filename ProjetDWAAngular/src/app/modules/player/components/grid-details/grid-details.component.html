@@ -7,14 +7,22 @@
   <div *ngIf="!loading">
     <h1>{{ grid.nameGrid }}</h1>
 
-    <div *ngIf="grid.characs && grid.characs.length > 0" class="characters-grid">
+    <div
+      *ngIf="grid.characs && grid.characs.length > 0"
+      class="characters-grid"
+    >
       <mat-card *ngFor="let character of grid.characs" class="character-card">
         <img
           *ngIf="character.imagePath"
           mat-card-image
           [src]="getCharacterImageUrl(character.idC)"
           [alt]="character.name"
-          class="character-image">
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+          loading="lazy"
+          (error)="handleImageError($event)"
+          class="character-image"
+        />
 
         <div *ngIf="!character.imagePath" class="no-image">
           <span>Pas d'image</span>
@@ -26,7 +34,10 @@
       </mat-card>
     </div>
 
-    <div *ngIf="!grid.characs || grid.characs.length === 0" class="no-characters">
+    <div
+      *ngIf="!grid.characs || grid.characs.length === 0"
+      class="no-characters"
+    >
       <p>Cette grille ne contient aucun personnage.</p>
     </div>
   </div>

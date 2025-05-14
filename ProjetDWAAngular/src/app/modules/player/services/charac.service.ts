@@ -81,14 +81,13 @@ export class CharacService {
     }).pipe(
       map(url => {
         console.log('Received raw URL:', url);
-        
         if (url.startsWith('/')) {
-          const fullUrl = `${this.imageBaseUrl}${url}`;
+          // Force HTTPS et ajouter no-cache pour éviter les problèmes de cache
+          const fullUrl = `${this.imageBaseUrl}${url}?nocache=${new Date().getTime()}`;
           console.log('Constructed full URL:', fullUrl);
           return fullUrl;
         }
-        
-        return url.replace('http://', 'https://');
+        return url.replace('http://', 'https://') + `?nocache=${new Date().getTime()}`;
       }),
       catchError(error => {
         console.error(`Error loading character image ${characId}:`, error);
