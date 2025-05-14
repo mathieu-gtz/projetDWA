@@ -69,7 +69,7 @@ export class GridDetailsComponent implements OnInit {
     });
   }
 
-  preloadCharacterImages(): void {
+preloadCharacterImages(): void {
     const imageRequests = this.characters.map(character => {
       return this.characService.getCharacImageUrl(character.idC).pipe(
         map(imagePath => {
@@ -81,7 +81,7 @@ export class GridDetailsComponent implements OnInit {
     forkJoin(imageRequests).subscribe({
       next: (results) => {
         results.forEach(result => {
-          // Store the path directly without concatenating localhost
+          // Store the complete URL
           this.characterImages.set(result.id, result.path);
         });
         this.characters = [...this.characters];
@@ -94,12 +94,20 @@ export class GridDetailsComponent implements OnInit {
 
   getCharacterImageUrl(character: any): string {
     const characterId = typeof character === 'object' ? character.idC : character;
+    // Return the complete URL directly without modification
     return this.characterImages.get(characterId) || `${environment.apiUrl}/images/default.png`;
   }
 
   handleImageError(event: Event) {
     const img = event.target as HTMLImageElement;
-    console.error('Image failed to load:', img.src);
-    img.src = `${environment.apiUrl}/images/default.png`;
+    const currentSrc = img.src;
+    console.error('Image failed to load:', currentSrc);
+    
+    // Remove localhost if it was incorrectly prepended
+    if (currentSrc.includes('localhost:8080https://')) {
+      img.src = currentSrc.replace('http://localhost:8080', '');
+    } else {
+      img.src = `${environment.apiUrl}/images/default.png`;
+    }
   }
 }
