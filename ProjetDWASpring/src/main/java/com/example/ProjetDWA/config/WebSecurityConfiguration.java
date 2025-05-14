@@ -49,6 +49,7 @@ public class WebSecurityConfiguration implements WebMvcConfigurer {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/games/**").permitAll()
+                        .requestMatchers("/api/games/grids/**").permitAll()
                         .requestMatchers("/topic/**").permitAll()
                         .requestMatchers("/app/**").permitAll()
                         .requestMatchers("/api/players/**").permitAll()
