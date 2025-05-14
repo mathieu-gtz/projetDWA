@@ -58,7 +58,7 @@
           <input
             matInput
             [(ngModel)]="currentChatMessage"
-            placeholder="Message ou '?' pour une question..."
+            placeholder="'/question' avant une question"
             (keyup.enter)="processMessage(currentChatMessage)"
           />
           <mat-hint *ngIf="isCurrentPlayerTurn">
