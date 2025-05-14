@@ -11,7 +11,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedOriginPattern("*");
+        corsConfiguration.addAllowedOriginPattern("https://bejewelled-granita-d4cad0.netlify.app");
         corsConfiguration.addAllowedMethod("*"); // Autoriser toutes les méthodes (GET, POST, PUT, DELETE, etc.)
         corsConfiguration.addAllowedHeader("*"); // Autoriser tous les en-têtes
         corsConfiguration.setAllowCredentials(true); // Autoriser les cookies
