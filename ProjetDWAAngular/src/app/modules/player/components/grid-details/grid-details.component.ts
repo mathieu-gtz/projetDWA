@@ -81,7 +81,8 @@ export class GridDetailsComponent implements OnInit {
     forkJoin(imageRequests).subscribe({
       next: (results) => {
         results.forEach(result => {
-          this.characterImages.set(result.id, `http://localhost:8080${result.path}`);
+          // Store the path directly without concatenating localhost
+          this.characterImages.set(result.id, result.path);
         });
         this.characters = [...this.characters];
       },
@@ -93,8 +94,7 @@ export class GridDetailsComponent implements OnInit {
 
   getCharacterImageUrl(character: any): string {
     const characterId = typeof character === 'object' ? character.idC : character;
-    return this.characterImages.get(characterId) ||
-      `${environment.apiUrl}/images/default.png`; // Use environment variable
+    return this.characterImages.get(characterId) || `${environment.apiUrl}/images/default.png`;
   }
 
   handleImageError(event: Event) {
