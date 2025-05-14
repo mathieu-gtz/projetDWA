@@ -735,16 +735,17 @@ private initializeWebSocketConnection(gameId: string) {
   }
 
 
-  handleImageError(event: Event) {
-    const img = event.target as HTMLImageElement;
-    const currentSrc = img.src;
-    console.error('Image failed to load:', currentSrc);
-    
-    if (currentSrc.includes('localhost:8080https://')) {
-      img.src = currentSrc.replace('http://localhost:8080', '');
-    } else {
-      img.src = `${environment.apiUrl}/images/default.png`;
+    handleImageError(event: Event) {
+        const img = event.target as HTMLImageElement;
+        const currentSrc = img.src;
+        
+        if (currentSrc.includes('projetdwa.onrender.comhttps//')) {
+            // Corriger l'URL en retirant la partie dupliquée
+            img.src = currentSrc.replace('projetdwa.onrender.comhttps//', 'https://');
+        } else {
+            // Fallback vers l'image par défaut
+            img.src = `${environment.apiUrl}/images/default.png`;
+        }
     }
-  }
 
 }
