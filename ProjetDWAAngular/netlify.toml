@@ -1,7 +1,7 @@
 [build]
   base = "ProjetDWAAngular"
-  command = "npm run build"
-  publish = "ProjetDWAAngular/dist/projet-dwaangular"
+  command = "npm install && npm run build"
+  publish = "dist/projet-dwaangular"
 
 [[redirects]]
   from = "/*"
