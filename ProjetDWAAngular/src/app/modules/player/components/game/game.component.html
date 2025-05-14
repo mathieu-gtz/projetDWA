@@ -21,7 +21,7 @@
     <mat-grid-tile *ngFor="let character of characters">
       <mat-card class="character-card">
         <img
-          [src]="getCharacterImageUrl(character.idC)"
+          [src]="getCharacterImageUrl(character)"
           [alt]="character.name"
           class="character-image"
         />
