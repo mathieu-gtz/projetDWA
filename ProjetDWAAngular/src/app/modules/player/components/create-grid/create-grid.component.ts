@@ -87,8 +87,6 @@ export class CreateGridComponent implements OnInit {
     forkJoin(imageRequests).subscribe({
       next: (results) => {
         results.forEach(result => {
-          // Store the complete URL without modification
-          console.log(`Storing URL for character ${result.id}:`, result.path);
           this.characterImages.set(result.id, result.path);
         });
         this.characters = [...this.characters];
@@ -102,9 +100,9 @@ export class CreateGridComponent implements OnInit {
   getCharacterImageUrl(character: any): string {
     const characterId = typeof character === 'object' ? character.idC : character;
     const imageUrl = this.characterImages.get(characterId);
-    console.log(`Getting URL for character ${characterId}:`, imageUrl);
     return imageUrl || `${environment.apiUrl}/images/default.png`;
   }
+
   toggleCharacterSelection(character: any): void {
     const index = this.selectedCharacters.findIndex(c => c.idC === character.idC);
 
@@ -171,6 +169,20 @@ export class CreateGridComponent implements OnInit {
       this.snackBar.open('Sélectionnez au moins 9 personnages', 'Fermer', { duration: 3000 });
     }
   }
+
+
+  handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    const currentSrc = img.src;
+    console.error('Image failed to load:', currentSrc);
+    
+    if (currentSrc.includes('localhost:8080https://')) {
+      img.src = currentSrc.replace('http://localhost:8080', '');
+    } else {
+      img.src = `${environment.apiUrl}/images/default.png`;
+    }
+  }
+  
 
   //méthode pas très opti qui fait crash l'appli
   /*

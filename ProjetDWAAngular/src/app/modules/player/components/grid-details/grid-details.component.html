@@ -12,6 +12,7 @@
       class="characters-grid"
     >
       <mat-card *ngFor="let character of grid.characs" class="character-card">
+        <!-- Image principale -->
         <img
           *ngIf="character.imagePath"
           mat-card-image
@@ -22,19 +23,26 @@
           loading="lazy"
           (error)="handleImageError($event)"
           class="character-image"
-          onerror="this.onerror=null;">
+        />
 
+        <!-- Image par défaut si pas d'image -->
         <div *ngIf="!character.imagePath" class="no-image">
-          <img [src]="environment.apiUrl + '/images/default.png'" 
-              alt="Default image"
-              class="character-image">
+          <img
+            [src]="environment.apiUrl + '/images/default.png'"
+            alt="Default image"
+            class="character-image"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+          />
         </div>
 
         <mat-card-content>
           <h3>{{ character.name }}</h3>
         </mat-card-content>
+      </mat-card>
     </div>
 
+    <!-- Message si pas de personnages -->
     <div
       *ngIf="!grid.characs || grid.characs.length === 0"
       class="no-characters"
