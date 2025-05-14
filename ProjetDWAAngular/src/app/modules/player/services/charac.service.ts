@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {StorageService} from '../../../auth/services/storage/storage.service';
-import {environment} from '../../../../environments/environment.prod';
-
-const BASE_URL = "environment.apiUrl";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { StorageService } from '../../../auth/services/storage/storage.service';
+import { environment } from '../../../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CharacService {
+  private apiUrl = `${environment.apiUrl}/api/characters`;  // Updated base URL
 
   constructor(private http: HttpClient) { }
 
@@ -19,17 +18,16 @@ export class CharacService {
       'Accept': 'application/json',
       'Authorization': `Bearer ${StorageService.getToken()}`,
     });
-    return this.http.get<any[]>(`${BASE_URL}`, { headers });
+    return this.http.get<any[]>(this.apiUrl, { headers });
   }
 
-
-  getCharacById(idC : number): Observable<any[]> {
+  getCharacById(idC: number): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': `Bearer ${StorageService.getToken()}`,
     });
-    return this.http.get<any[]>(`${BASE_URL}/${idC}`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/${idC}`, { headers });
   }
 
   createCharac(charac: any, image: File): Observable<any> {
@@ -57,7 +55,7 @@ export class CharacService {
       'Authorization': `Bearer ${StorageService.getToken()}`,
     });
 
-    return this.http.post<any>(`${BASE_URL}`, formData, { headers });
+    return this.http.post<any>(this.apiUrl, formData, { headers });
   }
 
   getCharacImageUrl(characId: number): Observable<string> {
@@ -67,8 +65,6 @@ export class CharacService {
     });
     const id = typeof characId === 'object' ? (characId as any).idC : characId;
 
-    // Utiliser l'ID correctement extrait et attendre une chaîne
-    return this.http.get(`${BASE_URL}/${id}/image-url`, {headers, responseType: 'text'});
+    return this.http.get(`${this.apiUrl}/${id}/image-url`, { headers, responseType: 'text' });
   }
-
 }
