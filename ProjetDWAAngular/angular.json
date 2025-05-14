@@ -29,7 +29,8 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/_redirects"
+              "src/_redirects",
+              "src/assets"
             ],
             "styles": [
               "src/styles.css"
