@@ -9,20 +9,22 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CharacService {
-  private apiUrl = `${environment.apiUrl}/api/characs`; // Updated endpoint
+  private apiUrl = `${environment.apiUrl}/api/characs`; 
+
+  private imageBaseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
   private getHeaders(): HttpHeaders {
     const token = StorageService.getToken();
-    console.log('Using token:', token); // Debug log
+    console.log('Using token:', token); 
     return new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
   }
 
   getAllCharacs(): Observable<any[]> {
-    console.log('Fetching characters from:', this.apiUrl); // Debug log
+    console.log('Fetching characters from:', this.apiUrl); 
     return this.http.get<any[]>(this.apiUrl, { 
       headers: this.getHeaders(),
       withCredentials: true 
@@ -80,29 +82,19 @@ export class CharacService {
       map(url => {
         console.log('Received raw URL:', url);
         
-        // If it's a local URL (starting with /), prefix with API URL
+        // If it's a path only (starts with /)
         if (url.startsWith('/')) {
-          const fullUrl = `${environment.apiUrl}${url}`;
-          console.log('Constructed full URL:', fullUrl);
+          // Directly construct the full URL that we know works
+          const fullUrl = `${this.imageBaseUrl}/images/charac${characId}.png`;
+          console.log('Direct image URL:', fullUrl);
           return fullUrl;
         }
         
-        // If it's localhost, replace with production URL
-        if (url.includes('localhost:8080')) {
-          const productionUrl = url.replace('http://localhost:8080', environment.apiUrl);
-          console.log('Converted localhost URL to:', productionUrl);
-          return productionUrl;
-        }
-        
-        // Ensure HTTPS
-        const secureUrl = url.replace('http://', 'https://');
-        console.log('Final URL:', secureUrl);
-        return secureUrl;
+        return url;
       }),
       catchError(error => {
         console.error(`Error loading character image ${characId}:`, error);
-        // Return a default image URL if there's an error
-        return of(`${environment.apiUrl}/images/default.png`);
+        return of(`${this.imageBaseUrl}/images/default.png`);
       })
     );
   }
