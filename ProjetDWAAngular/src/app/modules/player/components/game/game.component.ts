@@ -488,28 +488,34 @@ private initializeWebSocketConnection(gameId: string) {
                 });
 
                 this.showResultDialog(isCorrectGuess, guessedCharacter.name);
-
-                const shouldAdvanceRound = this.bothPlayersMustGuess ? 
-                    (this.hasGuessedThisRound.player1 && this.hasGuessedThisRound.player2) :
-                    true;
-
-                if (shouldAdvanceRound) {
-                    this.currentRound++;
-                    this.resetRoundState();
-                    
-                    this.webSocketService.sendGameMessage({
-                        gameId: this.game.idG,
-                        type: 'SYSTEM',
-                        content: 'INCREMENT_ROUND',
-                        sender: StorageService.getUser().nickname
-                    });
-
-                    setTimeout(() => {
-                        this.openCharacterSelectionDialog();
-                    }, 1500);
+                if (this.bothPlayersMustGuess) {
+                    if (this.hasGuessedThisRound.player1 && this.hasGuessedThisRound.player2) {
+                        this.advanceToNextRound();
+                    } else {
+                        this.waitingForGuess = false;
+                        this.canAskQuestion = false;
+                    }
+                } else {
+                    this.advanceToNextRound();
                 }
             }
         });
+    }
+
+    private advanceToNextRound() {
+        this.currentRound++;
+        this.resetRoundState();
+        
+        this.webSocketService.sendGameMessage({
+            gameId: this.game.idG,
+            type: 'SYSTEM',
+            content: 'INCREMENT_ROUND',
+            sender: StorageService.getUser().nickname
+        });
+
+        setTimeout(() => {
+            this.openCharacterSelectionDialog();
+        }, 1500);
     }
 
     private showResultDialog(isCorrectGuess: boolean, characterName: string) {
@@ -604,6 +610,7 @@ private initializeWebSocketConnection(gameId: string) {
         this.canAskMoreQuestions = true;
         this.waitingForAnswer = false;
         this.waitingForGuess = false;
+        this.bothPlayersMustGuess = false;
         
         // Reset des états de devinette
         this.bothPlayersMustGuess = false;
