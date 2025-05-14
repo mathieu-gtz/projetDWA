@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {StorageService} from '../../../auth/services/storage/storage.service';
+import {environment} from '../../../../environments/environment.prod';
 
-const BASE_URL = 'http://localhost:8080/api/characs';
+const BASE_URL = "environment.apiUrl";
 
 @Injectable({
   providedIn: 'root'

@@ -6,8 +6,9 @@ import {StorageService} from '../../../auth/services/storage/storage.service';
 import { GameService } from './game.service';
 import { WebSocketSubject, webSocket } from 'rxjs/webSocket';
 import { GameMessage } from '../models/GameMessage';
+import { environment } from '../../../../environments/environment.prod';
 
-const WebSocketUrl = 'http://localhost:8080/ws';
+const WebSocketUrl = `${environment.apiUrl}/ws`;
 
 interface GameStartMessage {
   gameId: number | string;

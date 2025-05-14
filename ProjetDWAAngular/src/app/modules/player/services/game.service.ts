@@ -5,15 +5,16 @@ import { StorageService} from '../../../auth/services/storage/storage.service';
 import { Game } from '../models/Game';
 import { Grid } from '../models/Grid';
 import { GameRules } from '../models/GameRules';
+import { environment } from '../../../../environments/environment.prod';
 
 
-const BASE_URL = 'http://localhost:8080/api/games';
+const BASE_URL = `${environment.apiUrl}/api/games`;
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {  
-  private readonly apiUrl = 'http://localhost:8080/api';
+  private readonly apiUrl = `${environment.apiUrl}/api/games`;
 
   constructor(private http: HttpClient) { }
 

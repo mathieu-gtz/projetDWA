@@ -5,8 +5,9 @@ import { StorageService } from '../../../auth/services/storage/storage.service';
 import {PlayerStats} from '../models/PlayerStats';
 import {Player} from '../models/Player';
 import {PlayerRanking} from '../models/PlayerRanking';
+import { environment } from '../../../../environments/environment.prod';
 
-const BASE_URL = 'http://localhost:8080/api/players/';
+const BASE_URL = `${environment.apiUrl}/api/players/`;
 
 @Injectable({
   providedIn: 'root'
